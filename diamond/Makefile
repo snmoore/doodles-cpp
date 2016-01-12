@@ -12,4 +12,4 @@ clean:
 	rm diamond
 
 diamond: diamond.cpp diamond.hpp
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@ 
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
