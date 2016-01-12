@@ -18,11 +18,33 @@
 //       B B
 //        A
 
+// Further considerations:
+//
+// What if the caller supplies a whitespace or digit or punctation character?
+// - the diamond may not make much sense
+//
+// This is currently only valid for ASCII due to use of char and curr - 'A' etc
+// - consider UTF8, UTF16, UCS2 etc
+//
+// Consider the performance implications
+// - lots of string operations, possibly lots of creation and copying
+// - use a reverse loop for the lower half, rather than std::reverse then loop
+// - reflect left/right as well as upper/lower
+//
+// Other approaches
+// - line building could be done in 1 or 2 steps using sprintf and %*s or similar
+// - allocate a 2-d array, initialise with spaces, then just fill in the diagonals
+
 #include <algorithm>
 #include <iostream>
-#include <numeric>
 #include <vector>
-#include "../diamond/diamond.hpp"
+#include "Diamond.hpp"
+
+int main()
+{
+    Diamond diamond('E');
+    std::cout << diamond.Print();
+}
 
 Diamond::Diamond(char c)
 {
@@ -83,10 +105,4 @@ std::string Diamond::Print()
     }
 
     return diamond;
-}
-
-int main()
-{
-    Diamond diamond('E');
-    std::cout << diamond.Print();
 }
