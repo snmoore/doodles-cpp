@@ -3,6 +3,9 @@
 ## atoi
 Convert a string to an integer
 
+## count_bits
+Count the number of bits set in a 32-bit word
+
 ## diamond
 Print a diamond for a character between A and Z
 
