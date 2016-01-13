@@ -3,6 +3,9 @@
 ## atoi
 Convert a string to an integer
 
+## binary_search
+Find the position of a target value (a key) in a sorted array using a binary search
+
 ## count_bits
 Count the number of bits set in a 32-bit word
 
