@@ -20,7 +20,7 @@ Generate the first 13 terms of the Fibonacci sequence:
     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
 
 ## linked_list
-A singly-linked list
+Singly- and doubly-linked lists
 
 ## matrix_multiply
 Multiply two matrices with dimensions m x n and n x p

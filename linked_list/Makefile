@@ -6,10 +6,14 @@ SHELL = /bin/sh
 
 CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 
-all: linked_list
+all: single double
 
 clean:
-	rm linked_list
+	rm single
+	rm double
 
-linked_list: linked_list.cpp
+single: single.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+
+double: double.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@

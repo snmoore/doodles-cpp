@@ -1,4 +1,4 @@
-// A singly linked list
+// A doubly-linked list
 
 #include <iostream>
 
@@ -13,9 +13,10 @@ class List {
 private:
     struct Node {
         int data;
+        Node* prev;
         Node* next;
 
-        Node(int data) : data(data), next(nullptr) { }
+        Node(int data) : data(data), prev(nullptr), next(nullptr) { }
     };
 
     Node* root = { nullptr };       // the head of the list
@@ -32,6 +33,7 @@ public:
     void insert(const int data, Node* node);        // insert a new element after an existing element
     void insert(const int data, compare_t compare); // insert a new element in the list in sorted order
     void print() const;             // print a representation of the list
+    void print_reverse() const;     // print a representation of the list in reverse
     void remove();                  // remove the element at the head of the list
     void reverse();                 // reverse the list
     int size() const;               // number of elements in the list
@@ -66,6 +68,9 @@ int List::head() const {
 void List::insert(const int data) {
     Node* node = new Node(data);    // create a new node; see delete in remove()
     node->next = root;              // new node points at the old head
+    if(root != nullptr) {
+        root->prev = node;          // old head points back to the new node
+    }
     root = node;                    // new node becomes the head
     elements++;                     // keep track of the number of elements
 }
@@ -76,9 +81,18 @@ void List::insert(const int data, Node* node) {
         throw runtime_error("Bad node");
     }
 
-    Node* after = new Node(data);   // create a new node; see delete in remove()
-    after->next = node->next;       // new node inserts before next
-    node->next = after;             // new node inserts after this node
+    Node* p = node;                 // p is the node before the new node
+    Node* q = new Node(data);       // create a new node; see delete in remove()
+    Node* r = node->next;           // r is the node after the new node
+
+    p->next = q;                    // p points to q...
+    q->prev = p;                    // ...and q points back to p
+
+    if(r != nullptr) {              // if not the tail
+        q->next = r;                // q points to r...
+        r->prev = q;                // ...and r points back to q
+    }
+
     elements++;                     // keep track of the number of elements
 }
 
@@ -164,6 +178,24 @@ void List::print() const {
     cout << endl;
 }
 
+// Print a representation of the list in reverse
+void List::print_reverse() const {
+    // Find the tail
+    Node* tail {};
+    for(Node* node = root; node != nullptr; node = node->next) {
+        if(node->next == nullptr) {
+            tail = node;
+        }
+    }
+
+    // Print the contents in reverse
+    cout << "Reverse Contents: ";
+    for(Node* node = tail ; node != nullptr; node = node->prev) {
+        cout << node->data << " ";
+    }
+    cout << endl;
+}
+
 // Remove the element at the head of the list
 void List::remove() {
     if(root == nullptr) {
@@ -172,6 +204,7 @@ void List::remove() {
 
     Node* node = root;          // head is about to be removed
     root = node->next;          // next element becomes the head
+    root->prev = nullptr;       // avoid dangling pointer to the old head
     delete node;                // free the removed element; see new in insert()
     elements--;                 // keep track of the number of elements
 }
@@ -183,15 +216,20 @@ void List::reverse() {
     }
 
     // 1: prev = null, curr = root, next = curr->next
-    // 2: curr points back to prev
+    // 2: swap prev and next
     // 3: prev = curr, curr = next
     // 4  root = prev
     Node* prev = nullptr;
     Node* curr = root;
     Node* next = {};
+    Node* temp = {};
     while(curr != nullptr) {
         next = curr->next;
-        curr->next = prev;
+
+        temp       = curr->next;
+        curr->next = curr->prev;
+        curr->prev = temp;
+
         prev = curr;
         curr = next;
     }
@@ -221,6 +259,7 @@ int main() {
     List* list = new List;
     cout << "Create a list:" << endl;
     list->print();
+    list->print_reverse();
 
     // Insert some items into the list
     for(int i = 0; i < 10; i++) {
@@ -228,11 +267,13 @@ int main() {
     }
     cout << endl << "Insert some items into the list:" << endl;
     list->print();
+    list->print_reverse();
 
     // Reverse the list
     cout << endl << "Reverse the list:" << endl;
     list->reverse();
     list->print();
+    list->print_reverse();
 
     // Remove some items from the list
     for(int i = 0; i < 5; i++) {
@@ -240,6 +281,7 @@ int main() {
     }
     cout << endl << "Remove some items from the list:" << endl;
     list->print();
+    list->print_reverse();
 
     // Destroy the list
     cout << endl << "Destroy the list:" << endl;
@@ -259,6 +301,7 @@ int main() {
         cout << e.what() << endl;
     }
     sorted->print();
+    sorted->print_reverse();
 
     // Destroy the list
     cout << endl << "Destroy the list:" << endl;
