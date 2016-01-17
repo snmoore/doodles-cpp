@@ -6,6 +6,9 @@ Convert a string to an integer
 ## binary_search
 Find the position of a target value (a key) in a sorted vector using a binary search
 
+## binary_tree
+Binary tree
+
 ## circular_buffer
 A circular buffer (or ring buffer) using an array
 
