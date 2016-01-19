@@ -6,14 +6,18 @@ SHELL = /bin/sh
 
 CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 
-all: single double
+all: single double template
 
 clean:
 	rm single
 	rm double
+	rm template
 
 single: single.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 double: double.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+	
+template: template.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
