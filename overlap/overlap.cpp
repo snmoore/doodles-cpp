@@ -1,4 +1,9 @@
 // Determine if two rectangles overlap
+//
+// Note that the simple, classic approach treats touching rectangles as
+// overlapping i.e. the edges have finite thickness. The bounding box approach
+// treats touching rectangles as non-overlapping i.e. the edges have no
+// thickness.
 
 #include <iostream>     // For cout etc
 #include <vector>       // For vector
@@ -23,7 +28,8 @@ public:
     static void draw(const Rect& r1, const Rect& r2);       // draw two rectangles using simple ASCII art
     void draw(vector<vector<char>>& grid) const;            // draw a rectangle into a simple ASCII art grid
 
-    static bool overlap(const Rect& r1, const Rect& r2);    // do the rectangles r1 and r2 overlap?
+    static bool overlap(const Rect& r1, const Rect& r2);    // do the rectangles r1 and r2 overlap? (simple, classic approach)
+    static bool overlap_bounding(const Rect& r1, const Rect& r2);   // do the rectangles r1 and r2 overlap? (using a bounding box approach)
 };
 
 // Draw two rectangles using simple ASCII art
@@ -69,8 +75,30 @@ void Rect::draw(vector<vector<char>>& grid) const {
     grid[b.y][a.x] = '+';       // lower left
 }
 
-// Do the rectangles r1 and r2 overlap?
+
+// Do the rectangles r1 and r2 overlap? (simple, classic approach)
+//
+// Note this treats touching rectangles as overlapping i.e. the edges have
+// finite thickness
 bool Rect::overlap(const Rect& r1, const Rect& r2) {
+    // Is one rectangle completely on the left side of the other?
+    if((r1.b.x < r2.a.x) || (r1.a.x > r2.b.x)) {
+        return false;
+    }
+
+    // Is one rectangle completely above the other?
+    if((r1.b.y < r2.a.y) || (r1.a.y > r2.b.y)) {
+        return false;
+    }
+
+    return true;
+}
+
+// Do the rectangles r1 and r2 overlap? (using a bounding box approach)
+//
+// Note this treats touching rectangles as non-overlapping i.e. the edges have
+// no thickness
+bool Rect::overlap_bounding(const Rect& r1, const Rect& r2) {
     bool overlap_horizontally = false;
     bool overlap_vertically   = false;
 
@@ -108,88 +136,88 @@ int main() {
     bool result;
 
     // No overlap in any dimension
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {5, 4}, {8, 6}};
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {5, 4}, {8, 6} };
     cout << endl << "No overlap in any dimension:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
-    // No overlap, touching at a corner
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {2, 3}, {8, 6}};
-    cout << endl << "No overlap, touching at a corner:" << endl;
+    // Touching at a corner
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {2, 3}, {8, 6} };
+    cout << endl << "Touching at a corner:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
-    // No overlap, touching along a horizontal edge
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {1, 3}, {4, 6}};
-    cout << endl << "No overlap, touching along a horizontal edge:" << endl;
+    // Touching along a horizontal edge
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {1, 3}, {4, 6} };
+    cout << endl << "Touching along a horizontal edge:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
-    // No overlap, touching along a vertical edge
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {2, 1}, {4, 6}};
-    cout << endl << "No overlap, touching along a vertical edge:" << endl;
+    // Touching along a vertical edge
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {2, 1}, {4, 6} };
+    cout << endl << "Touching along a vertical edge:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Partial overlap in the x dimension i.e. horizontal
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {1, 4}, {4, 6}};
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {1, 4}, {4, 6} };
     cout << endl << "Partial overlap in the x dimension i.e. horizontal:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Partial overlap in the y dimension i.e. vertical
-    r1 = { {0, 0}, {2, 3}};
-    r2 = { {5, 2}, {8, 4}};
+    r1 = { {0, 0}, {2, 3} };
+    r2 = { {5, 2}, {8, 4} };
     cout << endl << "Partial overlap in the y dimension i.e. vertical:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Complete overlap in the x dimension i.e. horizontal
-    r1 = { {0, 0}, {10, 4}};
-    r2 = { {2, 6}, {8, 9}};
+    r1 = { {0, 0}, {10, 4} };
+    r2 = { {2, 6}, {8, 9} };
     cout << endl << "Complete overlap in the x dimension i.e. horizontal:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Complete overlap in the y dimension i.e. vertical
-    r1 = { {0, 0}, {4, 10}};
-    r2 = { {6, 3}, {9, 7}};
+    r1 = { {0, 0}, {4, 10} };
+    r2 = { {6, 3}, {9, 7} };
     cout << endl << "Complete overlap in the y dimension i.e. vertical:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Overlap in both x and y dimensions i.e. horizontal and vertical
-    r1 = { {2, 1}, {10, 6}};
-    r2 = { {1, 4}, {8, 8}};
+    r1 = { {2, 1}, {10, 6} };
+    r2 = { {1, 4}, {8, 8} };
     cout << endl << "Overlap in both x and y dimensions i.e. horizontal and vertical:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Coincident rectangles
-    r1 = { {1, 1}, {4, 4}};
-    r2 = { {1, 1}, {4, 4}};
+    r1 = { {1, 1}, {4, 4} };
+    r2 = { {1, 1}, {4, 4} };
     cout << endl << "Coincident rectangles:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
     cout << "Overlap: " << boolalpha << result << endl;
 
     // Empty rectangles
-    r1 = { {0, 0}, {0, 0}};
-    r2 = { {0, 0}, {0, 0}};
+    r1 = { {0, 0}, {0, 0} };
+    r2 = { {0, 0}, {0, 0} };
     cout << endl << "Empty rectangles:" << endl;
     Rect::draw(r1, r2);
     result = Rect::overlap(r1, r2);
