@@ -37,6 +37,9 @@ Multiply two matrices with dimensions m x n and n x p
 ## matrix_transpose
 Transpose a matrix
 
+## overlap
+Determine if two rectangles overlap
+
 ## reverse
 Reverse words and sentences
 
