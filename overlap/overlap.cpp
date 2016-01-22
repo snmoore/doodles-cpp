@@ -1,6 +1,5 @@
 // Determine if two rectangles overlap
 
-#include <algorithm>    // For max
 #include <iostream>     // For cout etc
 #include <vector>       // For vector
 
