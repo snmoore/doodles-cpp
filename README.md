@@ -29,7 +29,7 @@ Generate the first 13 terms of the Fibonacci sequence:
 Sort a vector of values using insertion sort
 
 ## linked_list
-Singly- and doubly-linked lists
+Single and doubly linked lists
 
 ## matrix_multiply
 Multiply two matrices with dimensions m x n and n x p
