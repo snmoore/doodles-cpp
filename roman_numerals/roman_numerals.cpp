@@ -1,9 +1,9 @@
-// Convert Roman numerals to decimal values
+// Convert Roman numerals to decimal values and vice versa
 //
 // See https://en.wikipedia.org/wiki/Roman_numerals
 //
-// Note that it is easier to process a Roman numeral string from right-to-left
-// rather than left-to-right:
+// Note that when converting a Roman numeral string to a decimal value it is
+// easier to the string from right-to-left rather than left-to-right:
 //
 //  right-to-left : only need the current and previous numeral to decide whether
 //                  to add or subtract
@@ -25,6 +25,7 @@ private:
 
 public:
     Roman(string str) :str(str) {}
+    Roman(unsigned int decimal);        // construct a Roman numeral from a decimal value
     unsigned int getDecimal() const;    // get the decimal representation of the Roman numerals
     string getString() const;           // get the string representation of the Roman numerals
 };
@@ -61,6 +62,52 @@ unsigned int Roman::char_to_decimal(char numeral) const {
   }
   return result;
 #endif
+}
+
+// Construct a Roman numeral from a decimal value
+Roman::Roman(unsigned int decimal) {
+    if(decimal == 0) {
+        throw runtime_error("0 cannot be represented in Roman numerals");
+    }
+
+    // Note that map is ordered, so listing M first has no benefit
+    map<unsigned int,char> numerals {
+        { 1,    'I' },
+        { 5,    'V' },
+        { 10,   'X' },
+        { 50,   'L' },
+        { 100,  'C' },
+        { 500,  'D' },
+        { 1000, 'M' },
+    };
+
+    // Work from M to I, subtracting numeral values whilst building the string
+    for(auto iter = numerals.rbegin(); iter != numerals.rend() && decimal > 0; iter++) {
+        // Use the current numeral as many times as possible
+        while(iter->first <= decimal) {
+            str     += iter->second;
+            decimal -= iter->first;
+        }
+
+        // Try subtractive notation before moving to the next lower numeral...
+
+        // Subtractive notation using non-adjacent numerals e.g. IX, XC, CM
+        if((distance(iter, numerals.rend()) > 2) &&
+           ((iter->first != 50)  && (iter->first != 500)) && // VL and LD are not valid
+           (decimal >= iter->first - next(iter, 2)->first)) {
+            str += next(iter, 2)->second;
+            str += iter->second;
+            decimal -= iter->first - next(iter, 2)->first;
+        }
+        // Subtractive notation using adjacent numerals e.g. IV, XL or CD
+        else if((distance(iter, numerals.rend()) > 1) &&
+                ((iter->first / next(iter, 1)->first) == 5) && // VX, LC and DM are not valid
+                (decimal >= iter->first - next(iter, 1)->first)) {
+            str += next(iter, 1)->second;
+            str += iter->second;
+            decimal -= iter->first - next(iter, 1)->first;
+        }
+    }
 }
 
 // Get the decimal representation of the Roman numerals
@@ -103,17 +150,21 @@ string Roman::getString() const {
 
 // Common test function
 void test(string str, unsigned int decimal) {
-    Roman roman = Roman(str);
+    // Convert in both directions
+    string d2s {};
+    unsigned int s2d {};
     try {
-        if(roman.getDecimal() == decimal) {
-            cout << setw(6) << roman.getString() << " " << decimal << endl;
+        d2s = Roman(decimal).getString();
+        s2d = Roman(str).getDecimal();
+        if((s2d == decimal) && (d2s == str)) {
+            cout << setw(13) << d2s << " " << s2d << endl;
         }
         else {
-            cout << setw(6) << roman.getString() << " - bad conversion" << endl;
+            cout << setw(13) << str << " - bad conversion, should be " << d2s << endl;
         }
     }
     catch(runtime_error& e) {
-        cout << setw(6) << roman.getString() << " - " << e.what() << endl;
+        cout << setw(13) << str << " - bad conversion, should be " << d2s << endl;
     }
 }
 
@@ -155,11 +206,12 @@ int main() {
 
     // Various years
     cout << "Various years:" << endl;
-    test("MCMIV",  1904); // from Wikipedia
-    test("MCMLIV", 1954); // from Wikipedia - as in the trailer for the movie The Last Time I Saw Paris
-    test("MCMXC",  1990); // from Wikipedia - used as the title of musical project Enigma's debut album MCMXC a.D., named after the year of its release.
-    test("MMXIV",  2014); // from Wikipedia - the year of the games of the XXII (22nd) Olympic Winter Games (in Sochi)
-    cout << endl;
+    test("MDCCCLXXXVIII", 1888); // a very long year
+    test("MCMIV",         1904); // from Wikipedia
+    test("MCMLIV",        1954); // from Wikipedia - as in the trailer for the movie The Last Time I Saw Paris
+    test("MCMXC",         1990); // from Wikipedia - used as the title of musical project Enigma's debut album MCMXC a.D., named after the year of its release.
+    test("MMXIV",         2014); // from Wikipedia - the year of the games of the XXII (22nd) Olympic Winter Games (in Sochi)
+    printf("\n");
 
     // Invalid combinations for subtractive notation
     cout << "Invalid combinations for subtractive notation:" << endl;
