@@ -13,6 +13,7 @@
 
 #include <iomanip>      // For setw
 #include <iostream>     // For cout etc
+#include <map>          // For map
 
 using namespace std;
 
@@ -30,20 +31,36 @@ public:
 
 // Convert a single Roman numeral to decimal
 unsigned int Roman::char_to_decimal(char numeral) const {
-    unsigned int result = 0;
+  map<char,unsigned int> numerals {
+      { 'I', 1    },
+      { 'V', 5    },
+      { 'X', 10   },
+      { 'L', 50   },
+      { 'C', 100  },
+      { 'D', 500  },
+      { 'M', 1000 },
+  };
 
-    switch(numeral) {
-    case 'I': result = 1;    break;
-    case 'V': result = 5;    break;
-    case 'X': result = 10;   break;
-    case 'L': result = 50;   break;
-    case 'C': result = 100;  break;
-    case 'D': result = 500;  break;
-    case 'M': result = 1000; break;
-    default: throw runtime_error("Invalid Roman numeral: " + string(1, numeral) + "\n");
-    }
+  // Using at() - throws out_of_range if the key was not found
+  return numerals.at(numeral);
 
-    return result;
+  // Using find() - returns iter.end() if the key was not found
+#if 0
+  auto iter = numerals.find(numeral);
+  if(iter == numerals.end()) {
+      throw runtime_error("Invalid Roman numeral: " + string(1, numeral) + "\n");
+  }
+  return iter->second;
+#endif
+
+  // Using [] - this inserts a new (key,value) pair if the key was not found
+#if 0
+  unsigned int result = numerals[numeral];
+  if(result == 0) {
+      throw runtime_error("Invalid Roman numeral: " + string(1, numeral) + "\n");
+  }
+  return result;
+#endif
 }
 
 // Get the decimal representation of the Roman numerals
