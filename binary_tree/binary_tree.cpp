@@ -26,18 +26,18 @@ private:
 
     Node* root = {nullptr};
 
-    void destroy(Node* node);                               // delete all nodes in a tree or sub-tree (recursive)
-    bool find(int data, compare_t compare, Node* node);     // find an item in a tree or sub-tree (recursive)
-    void insert(int data, compare_t compare, Node** node);  // insert a new node into a tree or sub-tree (recursive)
-    void print(Node* node, int level) const;                // print the contents of a tree or sub-tree (recursive)
-    void remove(int data, compare_t compare, Node* node, Node** plink);  // remove an item in the tree (recursive)
+    void destroy(Node* node);                                           // delete all nodes in a tree or sub-tree (recursive)
+    bool find(int data, compare_t compare, Node* node);                 // find an item in a tree or sub-tree (recursive)
+    void insert(int data, compare_t compare, Node** node);              // insert a new node into a tree or sub-tree (recursive)
+    void print(Node* node, int level) const;                            // print the contents of a tree or sub-tree (recursive)
+    void remove(int data, compare_t compare, Node* node, Node** plink); // remove an item in the tree (recursive)
 
 public:
-    ~Tree();                                                // destructor - delete all nodes in the tree
-    bool find(int data, compare_t compare);                 // find an item in the tree
-    void insert(int data, compare_t compare);               // insert a new node into the tree
-    void print() const;                                     // print the contents of the tree
-    void remove(int data, compare_t compare);               // remove an item in the tree
+    ~Tree();                                    // destructor - delete all nodes in the tree
+    bool find(int data, compare_t compare);     // find an item in the tree
+    void insert(int data, compare_t compare);   // insert a new node into the tree
+    void print() const;                         // print the contents of the tree
+    void remove(int data, compare_t compare);   // remove an item in the tree
 };
 
 // Destructor - delete all nodes in the tree
@@ -124,7 +124,7 @@ void Tree::print(Node* node, int level = 0) const {
 
 // Remove an item in the tree
 void Tree::remove(int data, compare_t compare) {
-    remove(data, compare, root, nullptr);
+    remove(data, compare, root, &root);
 }
 
 // Remove an item in the tree (recursive)
@@ -159,9 +159,23 @@ void Tree::remove(int data, compare_t compare, Node* node, Node** plink) {
                 }
                 else {
                     // Node has both left and right sub-tree
-                    // TODO
-                    // Successor is the left-most node in the right sub-tree
-                    // Successor acquires the left and right sub-tree
+
+                    // Find the successor node, which is the left-most node in the right sub-tree
+                    Node** psucc = &node->right;
+                    while((*psucc)->left != nullptr) {
+                        psucc = &(*psucc)->left;
+                    }
+
+                    // Break the link between the successor and its parent
+                    Node* succ = *psucc;
+                    *psucc = nullptr;
+
+                    // Successor node acquires the removed node's left and right sub-trees
+                    succ->left = node->left;
+                    succ->right = node->right;
+
+                    // Replace the removed node with the successor
+                    *plink = succ;
                 }
             }
         }
@@ -237,6 +251,11 @@ int main() {
     // Remove a node that has a left sub-tree only
     cout << endl << "Remove a node that has a left sub-tree only: " << endl;
     tree->remove(2, compare_function);
+    tree->print();
+
+    // Remove a node that has both a left and a right sub-tree
+    cout << endl << "Remove a node that has a left and a right sub-tree: " << endl;
+    tree->remove(9, compare_function);
     tree->print();
 
     // Clean-up

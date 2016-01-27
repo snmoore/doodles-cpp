@@ -135,7 +135,7 @@ void Tree<T>::print(Node* node, int level) const {
 // Remove an item in the tree
 template<typename T>
 void Tree<T>::remove(T data, int (*compare)(T a, T b)) {
-    remove(data, compare, root, nullptr);
+    remove(data, compare, root, &root);
 }
 
 // Remove an item in the tree (recursive)
@@ -171,9 +171,23 @@ void Tree<T>::remove(T data, int (*compare)(T a, T b), Node* node, Node** plink)
                 }
                 else {
                     // Node has both left and right sub-tree
-                    // TODO
-                    // Successor is the left-most node in the right sub-tree
-                    // Successor acquires the left and right sub-tree
+
+                    // Find the successor node, which is the left-most node in the right sub-tree
+                    Node** psucc = &node->right;
+                    while((*psucc)->left != nullptr) {
+                        psucc = &(*psucc)->left;
+                    }
+
+                    // Break the link between the successor and its parent
+                    Node* succ = *psucc;
+                    *psucc = nullptr;
+
+                    // Successor node acquires the removed node's left and right sub-trees
+                    succ->left = node->left;
+                    succ->right = node->right;
+
+                    // Replace the removed node with the successor
+                    *plink = succ;
                 }
             }
         }
@@ -251,6 +265,11 @@ void integers() {
     cout << endl << "Remove a node that has a left sub-tree only: " << endl;
     itree->remove(2, compare_function);
     itree->print();
+	
+    // Remove a node that has both a left and a right sub-tree
+    cout << endl << "Remove a node that has a left and a right sub-tree: " << endl;
+    itree->remove(9, compare_function);
+    itree->print();
 
     // Destroy the tree of integers
     cout << endl << "Destroy the tree of integers:" << endl;
@@ -319,6 +338,11 @@ void chars() {
     // Remove a node that has a left sub-tree only
     cout << endl << "Remove a node that has a left sub-tree only: " << endl;
     ctree->remove('c', compare_function);
+    ctree->print();
+
+    // Remove a node that has both a left and a right sub-tree
+    cout << endl << "Remove a node that has a left and a right sub-tree: " << endl;
+    ctree->remove('j', compare_function);
     ctree->print();
 
     // Destroy the tree of chars
