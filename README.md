@@ -49,5 +49,8 @@ Convert Roman numerals to decimal values
 ## roundup
 Round up an integer to the next highest power of 2
 
+## special_member_functions
+Special member functions that the compiler will automatically generate if they are used but not declared explicitly by the programmer
+
 ## stack
 A stack implemented using a linked list
