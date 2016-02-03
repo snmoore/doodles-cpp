@@ -6,15 +6,18 @@ SHELL = /bin/sh
 
 CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 
-all: stack template
+all: stack template stl
 
 clean:
 	rm stack
 	rm template
+	rm stl
 
 stack: stack.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 template: template.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
-	
+
+stl: stl.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
