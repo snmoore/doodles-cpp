@@ -6,14 +6,18 @@ SHELL = /bin/sh
 
 CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 
-all: binary_tree template
+all: binary_tree template stl
 
 clean:
 	rm binary_tree
 	rm template
+	rm stl
 
 binary_tree: binary_tree.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 	
 template: template.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+
+stl: stl.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
