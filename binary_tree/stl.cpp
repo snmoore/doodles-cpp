@@ -67,26 +67,11 @@ void integers() {
         cout << "Failed to find " << value << endl;
     }
 
-    // Remove a node that *likely* has no children
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has no children: " << endl;
+    // Remove some integers
+    cout << endl << "Remove some integers: 17 6 2 9" << endl;
     itree->erase(17);
-    print(*itree);
-
-    // Remove a node that *likely* has a right sub-tree only
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has a right sub-tree only: " << endl;
     itree->erase(6);
-    print(*itree);
-
-    // Remove a node that *likely* has a left sub-tree only
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has a left sub-tree only: " << endl;
     itree->erase(2);
-    print(*itree);
-
-    // Remove a node that *likely* has both a left and a right sub-tree
-    cout << endl << "Remove a node that likely has a left and a right sub-tree: " << endl;
     itree->erase(9);
     print(*itree);
 
@@ -143,27 +128,11 @@ void chars() {
         cout << "Failed to find " << value << endl;
     }
 
-    // Remove a node that *likely* has no children
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has no children: " << endl;
+    // Remove some chars
+    cout << endl << "Remove some chars: r g c j" << endl;
     ctree->erase('r');
-    print(*ctree);
-
-    // Remove a node that *likely* has a right sub-tree only
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has a right sub-tree only: " << endl;
     ctree->erase('g');
-    print(*ctree);
-
-    // Remove a node that *likely* has a left sub-tree only
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has a left sub-tree only: " << endl;
     ctree->erase('c');
-    print(*ctree);
-
-    // Remove a node that *likely* has both a left and a right sub-tree
-    // (the internal details of set are unknown, but likely a red-black tree)
-    cout << endl << "Remove a node that likely has a left and a right sub-tree: " << endl;
     ctree->erase('j');
     print(*ctree);
 
