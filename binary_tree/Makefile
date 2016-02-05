@@ -9,9 +9,9 @@ CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 all: binary_tree template stl
 
 clean:
-	rm binary_tree
-	rm template
-	rm stl
+	-rm binary_tree
+	-rm template
+	-rm stl
 
 binary_tree: binary_tree.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@

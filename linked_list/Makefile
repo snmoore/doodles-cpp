@@ -9,10 +9,10 @@ CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 all: single double template stl
 
 clean:
-	rm single
-	rm double
-	rm template
-	rm stl
+	-rm single
+	-rm double
+	-rm template
+	-rm stl
 
 single: single.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@

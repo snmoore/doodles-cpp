@@ -9,9 +9,9 @@ CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 all: stack template stl
 
 clean:
-	rm stack
-	rm template
-	rm stl
+	-rm stack
+	-rm template
+	-rm stl
 
 stack: stack.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
