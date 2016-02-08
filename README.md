@@ -12,6 +12,9 @@ Binary tree
 ## circular_buffer
 A circular buffer (or ring buffer) using an array
 
+## compound_words
+Find the longest compound word in a list that is a concatenation of other words in the list
+
 ## count_bits
 Count the number of bits set in a 32-bit word
 
