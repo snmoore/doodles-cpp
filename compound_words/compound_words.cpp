@@ -82,22 +82,27 @@
 // Check the length of each valid compound word against the longest seen so far,
 // and update the longest if longer.
 //
+// Alternative approaches tried:
+//      1. Using a dynamic structure instead of the fixed size array of children
+//         - reduces the size complexity of the trie
+//         - but increases the trie build time, ~3x slower for map<char,node>
 //
 // Issues / to do:
 //      1. Use tolower() or similar in case the input word list uses mixed case
 //      2. Add some safety checks e.g. check for null trie, queue etc
-//      3. Use a dynamic structure instead of the fixed size array of children
-//         - minimise the size complexity of the trie
-//         - maybe use a map or list?
-//         - might increase runtime?
-//      4. Consider sorting candidates by longest length
+//      3. Perform the searches in parallel i.e. step 2 and/or 3
+//         - maybe not worth it, given the trie creation and deletion times
+//           are larger
+//      4. Build the trie in parallel i.e. step 1
+//         - here be dragons!
+//      5. Consider sorting candidates by longest length
 //         - consider the longest candidate first
 //         - discard candidates shorter than the longest valid compound word
 //           seen so far
 //         - maybe use a map with the length as the key?
 //         - maybe not worth it, given the trie creation and deletion times
-//           are larger (but see 3)?
-//      5. Identify a solution to the complex case outlined above
+//           are larger
+//      6. Identify a solution to the complex case outlined above
 //         - where xxx, yyy, zzz and xxxyyyzzz are all present in the list of
 //           words, but neither xxxyyy nor yyyzzz are present.
 
