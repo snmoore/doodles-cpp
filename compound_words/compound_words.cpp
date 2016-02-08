@@ -35,7 +35,7 @@
 // For example, given xxx, yyy and xxxyyy as the list of words, the trie will
 // look something like:
 //
-//                 root         -- represents the empty string)
+//                 root         -- represents the empty string
 //                 /  \
 //                x    y
 //               /      \
@@ -263,8 +263,7 @@ string find_longest(queue<Candidate>* candidates, const Node& trie) {
         Candidate candidate = candidates->front();
         candidates->pop();
 
-        // Check its suffix is also in the trie; this may also add new
-        // candidates to the queue e.g. when the suffix is also a compound word
+        // Check its suffix is also in the trie
         bool found = check_suffix(candidate.suffix, trie);
         if(found) {
             // Word and its suffix are both in the queue, is it the longest?
