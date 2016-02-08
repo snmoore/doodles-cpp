@@ -3,6 +3,11 @@
 //
 // See https://github.com/NodePrime/quiz (from which word.list was obtained).
 //
+// Usage:
+//      compound_words                      use a list of inbuilt test words
+//      compound_words file                 read list of words from file
+//      compound_words word1 word2 ...      read list of words from command line
+//
 // This solution is valid for simple compounds words of the form xxxyyy
 // where xxx, yyy and xxxyyy are all present in the list of words.
 //
@@ -13,13 +18,12 @@
 // Given the file word.list as input, this returns the following typical results
 // on a Core i7 3770T with 16GB RAM:
 //      Longest compound word: antidisestablishmentarianisms (29)
-//
-//      Get list of words: 47ms
-//      Build trie:        90ms
-//      Find candidates:   60ms
-//      Find longest:      40ms
-//      Clean up:          87ms
-//      Total time:        325ms
+//      Get list of words:     47ms
+//      Build trie:            90ms
+//      Find candidates:       60ms
+//      Find longest:          40ms
+//      Clean up:              87ms
+//      Total time:            325ms
 //
 // This solution uses three main steps:
 //      1. Build a trie containing all of the words
@@ -124,13 +128,43 @@ struct Candidate {
     string suffix;      // e.g. "field"
 };
 
-// Get the list of words
-vector<string>* get_word_list() {
+// Get a list of inbuilt test words
+vector<string>* get_words_inbuilt() {
+    vector<string>* words = new vector<string> {
+        "abut",
+        "but",
+        "bit",
+        "bite",
+        "cat",
+        "catdogcatdog", // complex compound word, see notes above
+        "dog",
+        "field",
+        "grand",
+        "grandmother",  // longest simple compound word
+        "green",
+        "greenfield",
+        "life",
+        "lifetime",
+        "mother",
+        "time"
+    };
+
+    cout << "List of words: " << endl;
+    for(auto word : *words) {
+        cout << word << endl;
+    }
+    cout << endl;
+
+    return words;
+}
+
+// Get the list of words from a file
+vector<string>* get_words_from_file(const string& filename) {
     // Store each word in a vector
     vector<string>* words = new vector<string>;
 
     // Read words line-by-line from a file
-    ifstream file("word.list");
+    ifstream file(filename);
     if(!file) {
         throw("Failed to open word.list");
     }
@@ -141,6 +175,41 @@ vector<string>* get_word_list() {
     file.close();
 
     return words;
+}
+
+// Get the list of words from the command line
+vector<string>* get_words_from_argv(int argc, char* argv[]) {
+    // Store each word in a vector
+    vector<string>* words = new vector<string>;
+
+    // Read words one-by-one from the command line
+    for(int i = 1; i < argc; i++) {
+        words->push_back(argv[i]);
+    }
+
+    cout << "List of words: " << endl;
+    for(auto word : *words) {
+        cout << word << endl;
+    }
+    cout << endl;
+
+    return words;
+}
+
+// Get the list of words, depending upon the command-line arguments
+vector<string>* get_word_list(int argc, char* argv[]) {
+    // Command line: compound_words
+    if(argc == 1) {
+        return get_words_inbuilt();
+    }
+    // Command line: compound_words file
+    if(argc == 2) {
+        return get_words_from_file(argv[1]);
+    }
+    // Command line: compound_words word1 word2 ...
+    else {
+        return get_words_from_argv(argc, argv);
+    }
 }
 
 // Compute array index 0..25 from letter a..z
@@ -276,11 +345,11 @@ string find_longest(queue<Candidate>* candidates, const Node& trie) {
     return longest;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     auto t0 = high_resolution_clock::now();
 
     // Preparation: Get the list of words
-    vector<string>* words = get_word_list();
+    vector<string>* words = get_word_list(argc, argv);
 
     auto t1 = high_resolution_clock::now();
 
@@ -307,11 +376,11 @@ int main() {
     auto t5 = high_resolution_clock::now();
 
     // Results
-    cout << endl << "Longest compound word: " << longest << " (" << longest.size() << ")" << endl << endl;
-    cout << "Get list of words: " << duration_cast<milliseconds>(t1-t0).count() << "ms" << endl;
-    cout << "Build trie:        " << duration_cast<milliseconds>(t2-t1).count() << "ms" << endl;
-    cout << "Find candidates:   " << duration_cast<milliseconds>(t3-t2).count() << "ms" << endl;
-    cout << "Find longest:      " << duration_cast<milliseconds>(t4-t3).count() << "ms" << endl;
-    cout << "Clean up:          " << duration_cast<milliseconds>(t5-t4).count() << "ms" << endl;
-    cout << "Total time:        " << duration_cast<milliseconds>(t5-t0).count() << "ms" << endl;
+    cout << "Longest compound word: " << longest << " (" << longest.size() << ")" << endl;
+    cout << "Get list of words:     " << duration_cast<milliseconds>(t1-t0).count() << "ms" << endl;
+    cout << "Build trie:            " << duration_cast<milliseconds>(t2-t1).count() << "ms" << endl;
+    cout << "Find candidates:       " << duration_cast<milliseconds>(t3-t2).count() << "ms" << endl;
+    cout << "Find longest:          " << duration_cast<milliseconds>(t4-t3).count() << "ms" << endl;
+    cout << "Clean up:              " << duration_cast<milliseconds>(t5-t4).count() << "ms" << endl;
+    cout << "Total time:            " << duration_cast<milliseconds>(t5-t0).count() << "ms" << endl;
 }
