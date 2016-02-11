@@ -174,8 +174,9 @@ void Tree::remove(int data, compare_t compare, Node* node, Node** plink) {
                     succ->left = node->left;
                     succ->right = node->right;
 
-                    // Replace the removed node with the successor
+                    // Replace the node with the successor
                     *plink = succ;
+                    delete node;
                 }
             }
         }
