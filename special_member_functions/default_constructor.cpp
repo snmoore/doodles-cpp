@@ -2,15 +2,13 @@
 //      default constructor         T()
 //
 //  This is used in the following circumstances:
-//      default constructor         T a
-//                                  T a {}
-//                                  T a = {}
+//      default constructor         T a         default initialized
+//                                  T a()       value initialized
+//                                  T a {}      value initialized
+//                                  T a = {}    value initialized
 //
 //  This is only generated if:
 //      no other constructor is explicitly declared
-//
-//  This performs the following actions:
-//      call the destructors of all the object's class-type members
 
 #include <iomanip>      // For setw
 #include <iostream>     // For cout etc

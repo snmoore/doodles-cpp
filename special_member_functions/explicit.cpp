@@ -7,9 +7,10 @@
 //      destructor                  ~T
 //
 //  These are used in the following circumstances:
-//      default constructor         T a
-//                                  T a {}
-//                                  T a = {}
+//      default constructor         T a         default initialized
+//                                  T a()       value initialized
+//                                  T a {}      value initialized
+//                                  T a = {}    value initialized
 //
 //      copy constructor            T b(a)
 //                                  T b = a

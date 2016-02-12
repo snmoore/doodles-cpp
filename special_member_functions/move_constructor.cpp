@@ -89,7 +89,7 @@ int main() {
     b.print();
 
     cout << left << setw(20) << endl << "Fill c: ";
-    c.fill(11);          // fill a with 11 12 13 14 15 16 17 18 19 20
+    c.fill(21);          // fill c with 21 22 23 24 25 26 27 28 29 30
     c.print();
 
     // Move constructor
