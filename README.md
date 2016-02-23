@@ -60,3 +60,6 @@ Special member functions that the compiler will automatically generate if they a
 
 ## stack
 A stack implemented using a linked list
+
+## threads
+Trivial threading example
