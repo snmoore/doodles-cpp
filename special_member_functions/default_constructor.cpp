@@ -2,10 +2,11 @@
 //      default constructor         T()
 //
 //  This is used in the following circumstances:
-//      default constructor         T a         default initialized
-//                                  T a()       value initialized
-//                                  T a {}      value initialized
-//                                  T a = {}    value initialized
+//      default constructor         T a
+//                                  T a {}
+//                                  T a = {}
+//                                  T a = T()
+//                                  T* a = new T
 //
 //  This is only generated if:
 //      no other constructor is explicitly declared
@@ -41,17 +42,25 @@ int main() {
     // Default constructor
     cout << endl << "Default constructor:" << endl;
 
-    cout << left << setw(20) << "Vector a";
+    cout << left << setw(25) << "Vector a";
     Vector a;           // compiler generates the default constructor
     a.print();
 
-    cout << left << setw(20) << "Vector b {}";
+    cout << left << setw(25) << "Vector b {}";
     Vector b {};        // compiler generates the default constructor
     b.print();          // will *not* call a constructor that takes a
                         // std::initializer_list if one is present
 
-    cout << left << setw(20) << "Vector c = {}";
+    cout << left << setw(25) << "Vector c = {}";
     Vector c = {};      // compiler generates the default constructor
     c.print();          // will *not* call a constructor that takes a
                         // std::initializer_list if one is present
+
+    cout << left << setw(25) << "Vector d = Vector()";
+    Vector d = Vector();    // calls the default constructor
+    d.print();
+
+    cout << left << setw(25) << "Vector* e = new Vector";
+    Vector* e = new Vector; // calls the default constructor
+    e->print();
 }

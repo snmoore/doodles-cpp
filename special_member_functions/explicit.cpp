@@ -7,10 +7,11 @@
 //      destructor                  ~T
 //
 //  These are used in the following circumstances:
-//      default constructor         T a         default initialized
-//                                  T a()       value initialized
-//                                  T a {}      value initialized
-//                                  T a = {}    value initialized
+//      default constructor         T a
+//                                  T a {}
+//                                  T a = {}
+//                                  T a = T()
+//                                  T* a = new T
 //
 //      copy constructor            T b(a)
 //                                  T b = a
@@ -148,63 +149,81 @@ int main() {
     // Default constructor
     cout << endl << "Default constructor:" << endl;
 
-    cout << left << setw(20) << "Vector a";
-    Vector a;           // calls the default constructor
+    cout << left << setw(25) << "Vector a";
+    Vector a;               // calls the default constructor
 
-    cout << left << setw(20) << "Vector b {}";
-    Vector b {};        // calls the default constructor
-                        // will *not* call a constructor that takes a
-                        // std::initializer_list if one is present
+    cout << left << setw(25) << "Vector b {}";
+    Vector b {};            // calls the default constructor
+                            // will *not* call a constructor that takes a
+                            // std::initializer_list if one is present
 
-    cout << left << setw(20) << "Vector c = {}";
-    Vector c = {};      // calls the default constructor
-                        // will *not* call a constructor that takes a
-                        // std::initializer_list if one is present
+    cout << left << setw(25) << "Vector c = {}";
+    Vector c = {};          // calls the default constructor
+                            // will *not* call a constructor that takes a
+                            // std::initializer_list if one is present
+
+    cout << left << setw(25) << "Vector d = Vector()";
+    Vector d = Vector();    // calls the default constructor
+
+    cout << left << setw(25) << "Vector* e = new Vector";
+    Vector* e = new Vector; // calls the default constructor
+
 
     // Fill in some data values
     cout << endl << "Fill a: ";
-    a.fill(1);          // fill a with 1 2 3 4 5 6 7 8 9 10
+    a.fill(1);              // fill a with 1 2 3 4 5 6 7 8 9 10
     a.print();
 
     cout << "Fill b: ";
-    b.fill(11);         // fill b with 11 12 13 14 15 16 17 18 19 20
+    b.fill(11);             // fill b with 11 12 13 14 15 16 17 18 19 20
     b.print();
 
     cout << "Fill c: ";
-    c.fill(21);         // fill b with 21 22 23 24 25 26 27 28 29 30
+    c.fill(21);             // fill c with 21 22 23 24 25 26 27 28 29 30
     c.print();
+
+    cout << "Fill d: ";
+    d.fill(31);             // fill d with 31 32 33 34 35 36 37 38 39 40
+    d.print();
+
+    cout << "Fill e: ";
+    e->fill(41);             // fill e with 41 42 43 44 45 46 47 48 49 50
+    e->print();
+
 
     // Copy constructor
     cout << endl << "Copy constructor:" << endl;
 
-    cout << left << setw(20) << "Vector d(a)";
-    Vector d(a);        // calls the copy constructor
+    cout << left << setw(20) << "Vector f(a)";
+    Vector f(a);            // calls the copy constructor
 
-    cout << left << setw(20) << "Vector e = a";
-    Vector e = a;       // calls the copy constructor
+    cout << left << setw(20) << "Vector g = b";
+    Vector g = b;           // calls the copy constructor
 
-    cout << left << setw(20) << "Vector f{a}";
-    Vector f{a};        // calls the copy constructor
-                        // will call (by preference) a constructor that takes a
-                        // std::initializer_list if one is present
+    cout << left << setw(20) << "Vector h{c}";
+    Vector h{c};            // calls the copy constructor
+                            // will call (by preference) a constructor that takes a
+                            // std::initializer_list if one is present
+
 
     // Copy assignment operator
     cout << endl << "Copy assignment operator:" << endl;
 
-    cout << left << setw(20) << "e = b";
-    e = b;              // calls the copy assignment operator
+    cout << left << setw(20) << "h = d";
+    h = d;                  // calls the copy assignment operator
+
 
     // Move constructor
     cout << endl << "Move constructor:" << endl;
 
-    cout << left << setw(20) << "Vector g(move(a))";
-    Vector g(move(a));  // calls the move constructor
+    cout << left << setw(20) << "Vector i(move(a))";
+    Vector i(move(a));      // calls the move constructor
 
-    cout << left << setw(20) << "Vector h = move(b)";
-    Vector h = move(b); // calls the move constructor
+    cout << left << setw(20) << "Vector j = move(b)";
+    Vector j = move(b);     // calls the move constructor
 
-    cout << left << setw(20) << "Vector i{move(c)}";
-    Vector i{move(c)};  // calls the move constructor
+    cout << left << setw(20) << "Vector k{move(c)}";
+    Vector k{move(c)};      // calls the move constructor
 
     // Check the moved objects
     cout << endl << "Moved a: ";
@@ -214,14 +233,15 @@ int main() {
     cout << "Moved c: ";
     c.print();
 
+
     // Move assignment operator
     cout << endl << "Move assignment operator:" << endl;
 
-    cout << left << setw(20) << "h = move(g)";
-    h = move(g);        // calls the move assignment operator
+    cout << left << setw(20) << "k = move(d)";
+    k = move(d);        // calls the move assignment operator
 
     // Check the moved objects
-    cout << endl << "Moved g: ";
-    g.print();
+    cout << endl << "Moved d: ";
+    d.print();
     cout << endl;
 }
