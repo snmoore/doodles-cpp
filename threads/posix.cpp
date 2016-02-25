@@ -1,4 +1,4 @@
-// Trivial threading example
+// Trivial threading example, using POSIX
 
 #include <cstring>      // For strerror
 #include <iostream>     // For cout

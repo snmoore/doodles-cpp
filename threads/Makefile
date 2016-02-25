@@ -7,10 +7,15 @@ SHELL = /bin/sh
 CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
 LDFLAGS += -lpthread
 
-all: threads
+all: posix threads
 
 clean:
-	rm threads
+	-rm posix
+	-rm threads
+
+posix: posix.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 threads: threads.cpp
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+	
