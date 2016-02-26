@@ -2,35 +2,34 @@
 
 using namespace std;
 
-int computeFactorials(int num, int max);
-//int factorial(int n);
-inline int factorial(int n) { return n == 1 ? 1 : factorial(n-1)*n; }
+// Optimised recursive function to compute the factorial of n
+inline unsigned int factorial(unsigned int n) { return n <= 1 ? 1 : n*factorial(n-1); }
 
-int main() {
-    computeFactorials(1, 8);
+// Recursive function to compute the factorial of n
+#if 0
+unsigned int factorial(unsigned int n) {
+    int result;
 
-    return 0;
+    if(n <= 1) {
+        result = 1;
+    }
+    else {
+        result = factorial(n-1) * n;
+    }
+    return result;
 }
+#endif
 
-int computeFactorials(int num, int max) {
+// Recursive function to compute a range of factorials from num..max
+void computeFactorials(unsigned int num, unsigned int max) {
    cout << "Factorial of " << num << " is " << factorial(num) << endl;
    num++;
-   if(num > max) {
-       return 0;
-   }
-   else {
-       return computeFactorials(num, max);
+   if(num <= max) {
+       computeFactorials(num, max);
    }
 }
 
-//int factorial(int n) {
-//    int result;
-//
-//    if(n == 1) {
-//        return 1;
-//    }
-//    else {
-//        result = factorial(n-1) * n;
-//    }
-//    return result;
-//}
+int main() {
+    // Compute 0!, 1!, 2! .. 8!
+    computeFactorials(0, 8);
+}
