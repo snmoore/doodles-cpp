@@ -15,11 +15,9 @@ int main() {
     cout << "Front: " << front << endl;
 
     back.assign(text, 27, text.size());
-    cout << "Back: " << back << endl;
+    cout << "Back:  " << back << endl;
 
     back.swap(front);
     cout << "Front: " << front << endl;
-    cout << "Back: " << back << endl;
-
-    return 0;
+    cout << "Back:  " << back << endl;
 }
