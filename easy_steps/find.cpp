@@ -8,22 +8,20 @@ int main() {
     int num;
 
     num = text.find("resist", 0);
-    cout << "Position: " << num << endl;
+    cout << "Position:    " << num << endl;
 
     num = text.find("nonesuch", 0);
-    cout << "Result: " << num << endl;
+    cout << "Result:      " << num << endl;
 
     num = text.find_first_of("If", 0);
-    cout << "First I: " << num << endl;
+    cout << "First I:     " << num << endl;
 
     num = text.find_first_not_of("If", 0);
     cout << "First not I: " << num << endl;
 
     num = text.find_last_of("t");
-    cout << "Last t: " << num << endl;
+    cout << "Last t:      " << num << endl;
 
     num = text.find_last_not_of("t", 0);
-    cout << "Last not t: " << num << endl;
-
-    return 0;
+    cout << "Last not t:  " << num << endl;
 }
