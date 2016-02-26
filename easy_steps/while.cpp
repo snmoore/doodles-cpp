@@ -4,8 +4,8 @@
 using namespace std;
 
 int main() {
-    vector <int> vec(10);
-    int i = 0;
+    vector<int> vec(10);
+    size_t i = 0;
 
     while(i < vec.size()) {
         i++;
