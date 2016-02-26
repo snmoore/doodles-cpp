@@ -9,7 +9,7 @@ float computeArea(char letter, float width, float height);
 int main() {
     float num, area;
 
-    cout << "Enter diameter in feet: ";
+    cout << "Enter dimension in feet: ";
     cin >> num;
 
     area = computeArea(num);
