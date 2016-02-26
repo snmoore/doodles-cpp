@@ -22,9 +22,10 @@ int main() {
 }
 
 void computeFeatures(string text) {
-    cout << endl << "String: " << text << endl;
-    cout << "Size: " << text.size();
-    cout << "\tCapacity: " << text.capacity();
-    cout << "\tSizeof: " << sizeof(text);
-    cout << "\tEmpty?: " << text.empty() << endl;
+    cout << "String: "     << text            << endl;
+    cout << "\tSize:     " << text.size()     << endl;
+    cout << "\tCapacity: " << text.capacity() << endl;
+    cout << "\tSizeof:   " << sizeof(text)    << endl;
+    cout << "\tEmpty?:   " << text.empty()    << endl;
+    cout << endl;
 }
