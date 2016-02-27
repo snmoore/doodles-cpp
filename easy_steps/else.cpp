@@ -8,7 +8,7 @@ using namespace std;
 #define PLATFORM "Linux"
 #elif defined __APPLE__
 #define PLATFORM "OS X"
-#elif
+#else
 #define PLATFORM "Unknown"
 #endif
 
