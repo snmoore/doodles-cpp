@@ -15,8 +15,11 @@ public:
 
 class Son : public Parent {
 public:
-//    Son(int a) : Parent(a) { cout << "Derived Son overloaded constructor called." << endl; }
-    Son(int a) : Parent(a) {}
+    // Calls the overloaded parent constructor first
+    Son(int a) : Parent(a) { cout << "Derived Son overloaded constructor called." << endl; }
+
+    // Calls the default parent constructor first
+    // Son(int a) { cout << "Derived Son overloaded constructor called." << endl; }
 };
 
 
