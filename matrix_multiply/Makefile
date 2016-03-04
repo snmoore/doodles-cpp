@@ -1,15 +1,24 @@
 # See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
 SHELL = /bin/sh
 
+SOURCES=matrix_multiply.cpp
+TARGET=matrix_multiply
+CFLAGS+=-std=c++11 -Wall -Wextra -Wpedantic -g
+LINT=scan-build -v
+
 .SUFFIXES:
 .SUFFIXES: .cpp .o
 
-CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
+.PHONY: all clean lint
 
-all: matrix_multiply
+all: $(TARGET)
 
 clean:
-	rm matrix_multiply
+	-rm $(TARGET)
+	-rm -rf $(TARGET).dSYM
 
-matrix_multiply: matrix_multiply.cpp
+lint: $(SOURCES)
+	$(LINT) $(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $(TARGET)
+
+$(TARGET): $(SOURCES)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
