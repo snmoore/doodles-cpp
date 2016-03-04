@@ -1,7 +1,7 @@
 // Transpose a matrix with dimensions m x n to dimensions n x m
 
 #include <exception>    // For std::invalid_argument etc
-#include <iomanip>      // For std:setw
+#include <iomanip>      // For std::setw
 #include <iostream>     // For std::cout etc
 
 // Transpose a matrix
