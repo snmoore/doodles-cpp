@@ -1,31 +1,55 @@
 // Transpose a matrix with dimensions m x n to dimensions n x m
 
-#include <cstdlib>      // For calloc
-#include <iostream>     // For cout etc
+#include <exception>    // For std::invalid_argument etc
+#include <iomanip>      // For std:setw
+#include <iostream>     // For std::cout etc
 
-using namespace std;
+// Transpose a matrix
+int* transpose(int* matrix, unsigned int rows, unsigned int cols) {
+    if(!matrix || !rows || !cols) {
+        throw(std::invalid_argument("transpose: bad arguments"));
+    }
 
-int* transpose(int* matrix, const unsigned int rows, const unsigned int cols) {
-    int* transposed = (int*)calloc(cols*rows, sizeof(int));
-    if((transposed != nullptr) && (matrix != nullptr)) {
-        for(unsigned int m = 0; m < rows; m++) {
-            for(unsigned int n = 0; n < cols; n++) {
-                transposed[n*rows + m] = matrix[m*cols + n];
-            }
+    int* transposed = new int[rows*cols];
+    for(unsigned int m = 0; m < rows; m++) {
+        for(unsigned int n = 0; n < cols; n++) {
+            transposed[n*rows +m] = matrix[m*cols + n];
         }
     }
     return transposed;
 }
 
-void print(int* matrix, const unsigned int rows, const unsigned int cols) {
-    if(matrix != nullptr) {
-        for(unsigned int m = 0; m < rows; m++) {
-            for(unsigned int n = 0; n < cols; n++) {
-                cout << matrix[m*cols + n] << " ";
-            }
-            cout << endl;
+// Print a matrix
+void print(int* matrix, unsigned int rows, unsigned int cols) {
+    if(!matrix || !rows || !cols) {
+        throw(std::invalid_argument("print: bad arguments"));
+    }
+
+    for(unsigned int m = 0; m < rows; m++) {
+        for(unsigned int n = 0; n < cols; n++) {
+            std::cout << std::setw(4) << matrix[m*cols +n];
         }
-        cout << endl;
+        std::cout << std::endl;
+    }
+}
+
+// Test transposing a matrix
+void test(int* matrix, unsigned int rows, unsigned int cols) {
+    try {
+        int* transposed = transpose(matrix, rows, cols);
+
+        std::cout << "Matrix:" << std::endl;
+        print(matrix, rows, cols);
+        std::cout << std::endl;
+
+        std::cout << "Transposed:" << std::endl;
+        print(transposed, cols, rows);
+        std::cout << std::endl;
+
+        delete[] transposed;
+    }
+    catch(std::exception& e) {
+        std::cout << e.what() << std::endl;
     }
 }
 
@@ -48,27 +72,13 @@ int main() {
         { 7, 8, 9 }
     };
 
-    // Transpose a to a'
-    cout << "Matrix a:" << endl;
-    print((int*)a, 2, 4);
-    int* m = transpose((int*)a, 2, 4);
-    cout << "Matrix a':" << endl;
-    print((int*)m, 4, 2);
-    free(m);
+    // Test transposing valid matrices
+    test(reinterpret_cast<int*>(a), 2, 4);
+    test(reinterpret_cast<int*>(b), 4, 2);
+    test(reinterpret_cast<int*>(c), 3, 3);
 
-    // Transpose b to b'
-    cout << "Matrix b:" << endl;
-    print((int*)b, 4, 2);
-    m = transpose((int*)b, 4, 2);
-    cout << "Matrix b':" << endl;
-    print((int*)m, 2, 4);
-    free(m);
-
-    // Transpose c to c'
-    cout << "Matrix c:" << endl;
-    print((int*)c, 3, 3);
-    m = transpose((int*)c, 3, 3);
-    cout << "Matrix c':" << endl;
-    print((int*)m, 3, 3);
-    free(m);
+    // Test transposing invalid matrices
+    test(nullptr, 2, 4);
+    test(reinterpret_cast<int*>(a), 0, 4);
+    test(reinterpret_cast<int*>(a), 2, 0);
 }

@@ -1,15 +1,24 @@
 # See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
 SHELL = /bin/sh
 
+SOURCES=matrix_transpose.cpp
+TARGET=matrix_transpose
+CFLAGS+=-std=c++11 -Wall -Wextra -Wpedantic -g
+LINT=scan-build -v
+
 .SUFFIXES:
 .SUFFIXES: .cpp .o
 
-CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
+.PHONY: all clean lint
 
-all: matrix_transpose
+all: $(TARGET)
 
 clean:
-	rm matrix_transpose
+	-rm $(TARGET)
+	-rm -rf $(TARGET).dSYM
 
-matrix_transpose: matrix_transpose.cpp
+lint: $(SOURCES)
+	$(LINT) $(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $(TARGET)
+
+$(TARGET): $(SOURCES)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
