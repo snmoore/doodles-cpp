@@ -1,3 +1,5 @@
+// Reverse words and sentences
+
 #include <algorithm>    // For std::reverse
 #include <cctype>       // For isspace
 #include <iostream>     // For std:cout etc
