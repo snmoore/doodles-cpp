@@ -1,15 +1,24 @@
 # See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
 SHELL = /bin/sh
 
+SOURCES=reverse.cpp
+TARGET=reverse
+CFLAGS+=-std=c++11 -Wall -Wextra -Wpedantic -g
+LINT=scan-build -v
+
 .SUFFIXES:
 .SUFFIXES: .cpp .o
 
-CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
+.PHONY: all clean lint
 
-all: reverse
+all: $(TARGET)
 
 clean:
-	rm reverse
+	-rm $(TARGET)
+	-rm -rf $(TARGET).dSYM
 
-reverse: reverse.cpp
+lint: $(SOURCES)
+	$(LINT) $(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $(TARGET)
+
+$(TARGET): $(SOURCES)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
