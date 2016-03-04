@@ -2,99 +2,106 @@
 //
 // See http://pubs.opengroup.org/onlinepubs/009695399/functions/atoi.html
 
-#include <cstdlib>      // For std::atoi()
-#include <iomanip>      // For setw()
-#include <iostream>     // For cout etc
-#include <sstream>      // For stringstream
-#include <vector>       // For vector
+#include <cctype>       // For isdigit
+#include <cstddef>      // For NULL
+#include <cstdlib>      // For atoi
+#include <iostream>     // For std::cout etc
+#include <strstream>    // For std::istrstream
+#include <string>       // For std::string
 
-using namespace std;
+#define NELEMENTS(array) ((sizeof(array))/(sizeof(array[0])))
 
-// Convert using a stringstream
-namespace stream {
-int atoi(string s) {
-    int i { 0 };
-    stringstream stream(s);
-    stream >> i;
-    return i;
-}
-}
-
-// Convert C-like using a range-for statement
-namespace range {
-int atoi(string s) {
-    int sign { 1 };
-    int i { 0 };
-
-    for(char& c : s) {
-        if(c == '+') {
-            sign = 1;
-            continue;
-        }
-
-        if(c == '-') {
-            sign = -1;
-            continue;
-        }
-
-        if(isdigit(c)) {
-            i *= 10;
-            i += c - '0';
-        }
-        else {
-            break;
-        }
+// A C implementation of atoi
+int atoi_c(const char *str) {
+    // Handle invalid input
+    if((str == NULL) || (*str == '\0')) {
+        return 0;
     }
 
-    return sign * i;
-}
-}
-
-// Convert C-like using an iterator
-namespace iterate {
-int atoi(string s) {
-    int sign { 1 };
-    int i { 0 };
-
-    for(auto iter = s.begin(); iter != s.end(); iter++) {
-        if(*iter == '+') {
-            sign = 1;
-            continue;
-        }
-
-        if(*iter == '-') {
-            sign = -1;
-            continue;
-        }
-
-        if(isdigit(*iter)) {
-            i *= 10;
-            i += *iter - '0';
-        }
-        else {
-            break;
-        }
+    // Handle sign digit, if present
+    int sign {1};
+    if(*str == '+') {
+        str++;
+    }
+    else if(*str == '-') {
+        sign = -1;
+        str++;
     }
 
-    return sign * i;
+    // Determine the value
+    int value {0};
+    while(isdigit(*str)) {
+        value *= 10;
+        value += *str - '0';
+        str++;
+    }
+
+    return sign * value;
 }
+
+// A C++ implementation of atoi
+int atoi_cpp(const char *str) {
+    // std::istrstream will segfault on a null pointer
+    if(str == nullptr) {
+        return 0;
+    }
+
+    // Extract the value via a string stream
+    std::istrstream input(str);
+    int value {0};
+    input >> value;
+    return value;
+}
+
+// Test a given atoi implementation
+void test(int (*function)(const char *str), std::string name) {
+    const char* tests[] = {
+            "-1",
+            "0",
+            "+1",
+            "1",
+            "12345",
+            "2147483647", // INT_MAX
+            "123abc",
+            "abc",
+            "",
+            nullptr,
+    };
+
+    for(size_t i = 0; i < NELEMENTS(tests); i++) {
+        // Brief description of the test
+        if(tests[i] != nullptr) {
+            std::cout << name << "(\"" << tests[i] << "\"): ";
+        }
+        else {
+            std::cout << name << "(null): ";
+
+            // Standard C library function atoi will segfault on a null pointer
+            if(name == "atoi") {
+                std::cout << "skipped" << std::endl;
+                continue;
+            }
+        }
+
+        // Test the function
+        try {
+            std::cout << function(tests[i]);
+        }
+        catch(std::exception& e) {
+            std::cout << e.what();
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
 
 int main() {
-    vector<string> strings { "0", "11", "+11", "-11", "2147483647", "abc", "" };
-                                                      /* INT_MAX */
+    // Test the standard library version of atoi
+    test(atoi, "atoi");
 
-    cout << left << setw(15) << "String";
-    cout << left << setw(15) << "std::atoi";
-    cout << left << setw(15) << "stream::atoi";
-    cout << left << setw(15) << "range::atoi";
-    cout << left << setw(15) << "iterate::atoi" << endl;
+    // Test the C implementation of atoi
+    test(atoi_c, "atoi_c");
 
-    for(auto s : strings) {
-        cout << left << setw(15) << "\"" + s + "\"";
-        cout << left << setw(15) << std::atoi(s.c_str());
-        cout << left << setw(15) << stream::atoi(s);
-        cout << left << setw(15) << range::atoi(s);
-        cout << left << setw(15) << iterate::atoi(s) << endl;
-    }
+    // Test the C++ implementation of atoi
+    test(atoi_cpp, "atoi_cpp");
 }
