@@ -1,6 +1,7 @@
 // Generate numbers in the Fibonacci sequence
 //
-// In mathematical terms, the sequence Fn of Fibonacci numbers is defined by the recurrence relation
+// In mathematical terms, the sequence Fn of Fibonacci numbers is defined by
+// the recurrence relation
 //      F{n} = F{n-1} + F{n-2}
 //  with seed values
 //      F{1} = 1, F{2} = 1
@@ -13,53 +14,51 @@
 //
 // See https://en.wikipedia.org/wiki/Fibonacci_number
 
-#include <iostream>     // For cout etc
+#include <iostream> // For std:cout etc
+#include <string>   // For std:string
 
-using namespace std;
-
-// Value of the nth term of the Fibonacci sequence, using iteration
-unsigned int iterate(unsigned int n) {
+// Iteratively calculate numbers in the Fibonacci sequence
+unsigned int iterative(unsigned int n) {
     if(n <= 1) {
         return n;
     }
     else {
-        unsigned int Fn_2 = 0; // F{0} = 0
-        unsigned int Fn_1 = 1; // F{1} = 1
-        unsigned int Fn   = 0;
-        unsigned int i    = 0;
-
-        for(i = 2; i <= n; i++) {
+        unsigned int Fn_2 {0}; // F{0} = 0
+        unsigned int Fn_1 {1}; // F{1} = 1
+        unsigned int Fn   {0};
+        for(unsigned int i = 2; i <= n; i++) {
             Fn   = Fn_1 + Fn_2;
             Fn_2 = Fn_1;
             Fn_1 = Fn;
         }
-
         return Fn;
     }
 }
 
-// Value of the nth term of the Fibonacci sequence, using recursion
-unsigned int recurse(unsigned int n) {
+// Recursively calculate numbers in the Fibonacci sequence
+unsigned int recursive(unsigned int n) {
     if(n <= 1) {
         return n;
     }
     else {
-        return recurse(n-1) + recurse(n-2);
+        return recursive(n - 1) + recursive(n - 2);
     }
 }
 
-int main(void) {
-    // Iteratively print the Fibonacci sequence
-    cout << "Iterative: ";
-    for(unsigned int n = 0; n < 21; n++) {
-        cout << iterate(n) << " ";
+// Test a given implementation
+void test(unsigned int (*function)(unsigned int n), std::string label) {
+    std::cout << label << ": ";
+    for(unsigned int i = 0; i < 21; i++) {
+        std::cout << function(i);
+        std::cout << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
+}
 
-    // Recursively print the Fibonacci sequence
-    cout << "Recursive: ";
-    for(unsigned int n = 0; n < 21; n++) {
-        cout << recurse(n) << " ";
-    }
-    cout << endl;
+int main() {
+    // Test the iterative implementation
+    test(iterative, "Iterative");
+
+    // Test the recursive implementation
+    test(recursive, "Recursive");
 }
