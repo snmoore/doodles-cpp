@@ -1,3 +1,10 @@
+// Sort a vector using insertion sort
+//
+// Insertion sort compares an item against those to the left, maintaining the
+// sorted set on the left and the unsorted set on the right, and iterates until
+// the entire set is sorted
+//
+// Executes in O(n^2) time
 
 #include <algorithm>    // For move
 #include <iostream>     // For std:cout etc
