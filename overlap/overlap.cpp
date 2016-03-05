@@ -170,9 +170,13 @@ int main() {
     test("Complete overlap in the y dimension i.e. vertical:",
            { {0, 0}, {4, 10} }, { {6, 3}, {9, 7} });
 
-    // Overlap in both x and y dimensions i.e. horizontal and vertical
-    test("Overlap in both x and y dimensions i.e. horizontal and vertical:",
+    // Partial overlap in both x and y dimensions i.e. horizontal and vertical
+    test("Partial overlap in both x and y dimensions i.e. horizontal and vertical:",
            { {2, 1}, {10, 6} }, { {1, 4}, {8, 8} });
+
+    // Complete overlap in both x and y dimensions i.e. horizontal and vertical
+    test("Complete overlap in both x and y dimensions i.e. horizontal and vertical",
+           { {1, 1}, {7, 7} }, { {3, 3}, {5, 5} });
 
     // Coincident rectangles
     test("Coincident rectangles:",
