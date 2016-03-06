@@ -66,3 +66,6 @@ A stack implemented using a linked list
 
 ## threads
 Trivial threading example
+
+## tuples
+Trivial examples using tuples
