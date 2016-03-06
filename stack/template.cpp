@@ -1,11 +1,29 @@
-// A stack implemented using a linked list and templates
+// A stack implemented using a linked list
 
-#include <iostream>
-
-using namespace std;
+#include <exception>    // For std::runtime_error
+#include <iostream>     // For std::cout etc
+#include <string>       // For std::string
+#include <typeinfo>     // For typeid
 
 template<typename T>
 class Stack {
+public:
+    ~Stack();                                   // destructor (pop all elements)
+    Stack() {}                                  // constructor
+    Stack(const Stack& rhs);                    // copy constructor (copy all elements)
+    Stack& operator=(const Stack& rhs);         // copy assignment operator (clean up the destination then copy all elements)
+    Stack(Stack&& rhs);                         // move constructor (steal the elements)
+    Stack& operator=(Stack&& rhs);              // move assignment operator (clean up the destination then steal the elements)
+
+    void push(T data);                          // push an item onto the stack
+    void pop();                                 // pop an item off the stack
+    void reverse();                             // reverse the order of items in the stack
+
+    bool empty() const;                         // is the stack empty?
+    size_t size() const;                        // get the number of elements in the stack
+    T top() const;                              // get the item at the top of the stack
+    void print(const std::string& label) const; // print the contents of the stack
+
 private:
     struct Node {
         T data;
@@ -14,135 +32,248 @@ private:
         Node(T data) : data(data), next(nullptr) {}
     };
 
-    Node* root = { nullptr };       // the top of the stack
-    int elements = { 0 };           // keep track of the number of elements
-
-public:
-    ~Stack();                       // destructor - free all elements
-    bool empty() const;             // is the stack empty?
-    void pop();                     // pop an element off the top of the stack
-    void push(T data);              // push an element onto the top of the stack
-    void print() const;             // print a representation of the stack
-    int size() const;               // number of elements in the stack
-    T top() const;                  // peek at the element at the top of the stack
+    Node* root {nullptr};
+    size_t nelements {0};
 };
 
-// Destructor - free all elements
+// Destructor (pop all elements)
 template<typename T>
 Stack<T>::~Stack() {
-    Node* next;
-    for(Node* node = root; node != nullptr; node = next) {
-        next = node->next;
-        cout << "Deleting node: " << node->data << endl;
-        delete node;
+    while(size() > 0) {
+        pop();
     }
+}
+
+// Copy constructor (copy all elements)
+template<typename T>
+Stack<T>::Stack(const Stack<T>& rhs) {
+    std::cout << "Copy constructor was called" << std::endl;
+
+    // Copy each element
+    Node* node = rhs.root;
+    while(node != nullptr) {
+        push(node->data);
+        node = node->next;
+    }
+
+    // But the simple push above means the copy is inverted, so reverse it
+    reverse();
+}
+
+// Copy assignment operator (clean up the destination then copy all elements)
+template<typename T>
+Stack<T>& Stack<T>::operator=(const Stack<T>& rhs) {
+    std::cout << "Copy assignment operator was called" << std::endl;
+
+    // Clean up the destination stack
+    while(size() > 0) {
+        pop();
+    }
+
+    // Copy each element
+    Node* node = rhs.root;
+    while(node != nullptr) {
+        push(node->data);
+        node = node->next;
+    }
+
+    // But the simple push above means the copy is inverted, so reverse it
+    reverse();
+
+    // Enable chains of assignments (see Effective C++, 2nd ed., item 15)
+    return *this;
+}
+
+// Move constructor (steal the elements)
+template<typename T>
+Stack<T>::Stack(Stack<T>&& rhs)
+    // Steal the elements from rhs
+    : root{rhs.root}, nelements(rhs.nelements) {
+
+    std::cout << "Move constructor was called" << std::endl;
+
+    // rhs now has no elements
+    rhs.root = nullptr;
+    rhs.nelements = 0;
+}
+
+// Move assignment operator (clean up the destination then steal the elements)
+template<typename T>
+Stack<T>& Stack<T>::operator=(Stack<T>&& rhs) {
+    std::cout << "Move assignment operator was called" << std::endl;
+
+    // Clean up the destination stack
+    while(size() > 0) {
+        pop();
+    }
+
+    // Steal the elements from rhs
+    root = rhs.root;
+    nelements = rhs.nelements;
+
+    // rhs now has no elements
+    rhs.root = nullptr;
+    rhs.nelements = 0;
+
+    // Enable chains of assignments (see Effective C++, 2nd ed., item 15)
+    return *this;
+}
+
+// Push an item onto the stack
+template<typename T>
+void Stack<T>::push(T data) {
+    Node* node = new Node(data);    // create a new node; see delete in pop
+    node->next = root;              // new node becomes the new top
+    root       = node;
+    nelements++;                    // keep track of the number of elements
+}
+
+// Pop an item off the stack
+template<typename T>
+void Stack<T>::pop() {
+    if(root == nullptr) {
+        throw(std::runtime_error("pop: stack is empty"));
+    }
+
+    Node* node = root;              // keep track of the popped element
+    root = node->next;              // next node become the new top
+    delete node;                    // destroy the new node; see new in push
+    nelements--;                    // keep track of the number of elements
+}
+
+// Reverse the order of items in the stack
+template<typename T>
+void Stack<T>::reverse() {
+    Node* prev {nullptr};
+    Node* curr {root};
+    Node* next {nullptr};
+    while(curr != nullptr) {
+        next = curr->next;  // about to be overwritten
+        curr->next = prev;  // reverse the nodes
+        prev = curr;        // move on
+        curr = next;
+    }
+    root = prev;            // root points at the new stop of the stack
 }
 
 // Is the stack empty?
 template<typename T>
 bool Stack<T>::empty() const {
-    return elements == 0;
+    return nelements == 0;
 }
 
-// Pop an element off the top of the stack
+// Get the number of elements in the stack
 template<typename T>
-void Stack<T>::pop() {
-    if(root == nullptr) {
-        throw runtime_error("Invalid operation: the stack is empty");
-    }
-
-    Node* node = root;              // keep track of the popped element
-    root = node->next;              // pop - lower node becomes the top
-    delete node;                    // free the popped element; see new in push()
-    elements--;                     // keep track of the number of elements
+size_t Stack<T>::size() const {
+    return nelements;
 }
 
-// Push an element onto the top of the stack
-template<typename T>
-void Stack<T>::push(T data) {
-    Node* node = new Node(data);    // create a new node; see delete in pop()
-    node->next = root;              // new node points at the old top
-    root = node;                    // new node becomes the top
-    elements++;                     // keep track of the number of elements
-}
-
-// Print a representation of the stack
-template<typename T>
-void Stack<T>::print() const {
-    cout << "Empty: " << boolalpha << empty() << endl;
-    cout << "Size: " << size() << endl;
-    if(size() > 0) {
-        cout << "Top: " << top() << endl;
-    }
-    cout << "Contents: ";
-    for(Node* node = root; node != nullptr; node = node->next) {
-        cout << node->data << " ";
-    }
-    cout << endl;
-}
-
-// Number of elements in the stack
-template<typename T>
-int Stack<T>::size() const {
-    return elements;
-}
-
-// Peek at the element at the top of the stack
+// Get the item at the top of the stack
 template<typename T>
 T Stack<T>::top() const {
     if(root == nullptr) {
-        throw runtime_error("Invalid operation: the stack is empty");
+        throw(std::runtime_error("top: stack is empty"));
     }
-
     return root->data;
 }
 
+// Print the contents of the stack
+template<typename T>
+void Stack<T>::print(const std::string& label) const {
+    std::cout << label << ": " << std::endl;
+    std::cout << "\tSize:     " << size() << std::endl;
+    std::cout << "\tEmpty:    " << std::boolalpha << empty() << std::endl;
+    std::cout << "\tElements: ";
+    Node* node = root;
+    while(node != nullptr) {
+        std::cout << node->data << " ";
+        node = node->next;
+    }
+    std::cout << std::endl << std::endl;
+}
+
+// Test a stack that stores elements of type T
+template<typename T>
+void test(const std::string& label) {
+    std::cout << "*** " << label << " ***" << std::endl;
+
+    // Create a new stack
+    Stack<T>* original = new Stack<T>();
+    original->print("Empty stack");
+
+    // Push some items onto the stack
+    for(int i = 0; i < 11; i++) {
+        if(typeid(T) == typeid(int)) {
+            original->push(i);
+        }
+        else if(typeid(T) == typeid(char)) {
+            original->push('a' + i);
+        }
+        else {
+            std::string msg = "test: unsupported type: ";
+            msg += typeid(T).name();
+            throw(std::runtime_error(msg));
+        }
+    }
+    original->print("Push some items onto the stack");
+
+    // Get the item at the top of the stack
+    std::cout << "Get the item at the top of the stack:" << std::endl;
+    std::cout << "\t" << original->top() << std::endl << std::endl;
+
+    // Pop some items from the stack
+    for(int i = 0; i < 5; i++) {
+        original->pop();
+    }
+    original->print("Pop some items from the stack");
+
+    // Reverse the stack
+    original->reverse();
+    original->print("Reverse the stack");
+
+    // Copy the stack
+    Stack<T>* copy1 = new Stack<T>(*original);
+    copy1->print("Copy the stack");
+
+    // Destroy the source stack
+    delete original;
+    copy1->print("Copied stack after the source stack was deleted");
+
+    // Copy the stack via assignment
+    Stack<T>* copy2 = new Stack<T>;
+    *copy2 = *copy1;
+    copy2->print("Copy the stack via assignment");
+
+    // Destroy the source stack
+    delete copy1;
+    copy2->print("Copied stack after the source stack was deleted");
+
+    // Move the stack
+    Stack<T>* copy3 = new Stack<T>(std::move(*copy2));
+    delete copy2;
+    copy2->print("Source stack after move");
+    copy3->print("Destination stack after move");
+
+    // Move the stack via assignment
+    Stack<T>* copy4 = new Stack<T>;
+    *copy4 = std::move(*copy3);
+    delete copy3;
+    copy3->print("Source stack after move assignment");
+    copy4->print("Destination stack after move assignment");
+
+    // Cleanup
+    delete copy4;
+}
+
 int main() {
-    // Create a stack of integers
-    Stack<int>* istack = new Stack<int>;
-    cout << "Create a stack of integers:" << endl;
-    istack->print();
+    try {
+        // Test a stack that stores integers
+        test<int>("Test a stack that stores integers");
 
-    // Push some integers onto the stack
-    for(int i = 0; i < 10; i++) {
-        istack->push(i);
+        // Test a stack that stores chars
+        test<char>("Test a stack that stores chars");
     }
-    cout << endl << "Push some integers onto the stack:" << endl;
-    istack->print();
-
-    // Pop some integers off the stack
-    for(int i = 0; i < 5; i++) {
-        istack->pop();
+    catch(std::exception& err) {
+        std::cerr << err.what() << std::endl;
     }
-    cout << endl << "Pop some integers off the stack:" << endl;
-    istack->print();
-
-    // Destroy the stack of integers
-    cout << endl << "Destroy the stack of integers:" << endl;
-    delete istack;
-
-    //------------------------
-
-    // Create a stack of chars
-    Stack<char>* cstack = new Stack<char>;
-    cout << endl << "Create a stack of chars:" << endl;
-    cstack->print();
-
-    // Push some chars onto the stack
-    for(int i = 0; i < 10; i++) {
-        cstack->push(('a' + i));
-    }
-    cout << endl << "Push some chars onto the stack:" << endl;
-    cstack->print();
-
-    // Pop some chars off the stack
-    for(int i = 0; i < 5; i++) {
-        cstack->pop();
-    }
-    cout << endl << "Pop some chars off the stack:" << endl;
-    cstack->print();
-
-    // Destroy the stack of chars
-    cout << endl << "Destroy the stack of chars:" << endl;
-    delete cstack;
 }
