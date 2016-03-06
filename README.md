@@ -43,6 +43,9 @@ Transpose a matrix
 ## overlap
 Determine if two rectangles overlap
 
+## pairs
+Trivial examples using pairs
+
 ## reverse
 Reverse words and sentences
 
