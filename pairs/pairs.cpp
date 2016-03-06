@@ -1,5 +1,6 @@
 // Trivial examples using pairs
 
+#include <utility>  // For std::pair
 #include <iostream> // For std::cout etc
 
 std::pair<int,char> pair1() {
