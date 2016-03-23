@@ -46,6 +46,9 @@ Determine if two rectangles overlap
 ## pairs
 Trivial examples using pairs
 
+## quick_sort
+Sort a vector of values using quicksort
+
 ## reverse
 Reverse words and sentences
 
