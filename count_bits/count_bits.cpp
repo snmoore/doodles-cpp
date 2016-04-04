@@ -44,6 +44,26 @@ unsigned int kernighan(unsigned int value) {
     return bits;
 }
 
+// Count using a lookup table
+unsigned int lookup(unsigned int value) {
+    // Lookup table that will contain the number of bits in all bytes 0..255
+    static unsigned int bits[256]; // is initialized to all zeros
+
+    // Only build the array once
+    if(!bits[1]) {
+        // Compute the number of bits set in all byte values 0..255
+        for(unsigned int i = 0; i < 256; i++) {
+            bits[i] = (i & 1) + bits[i/2];
+        }
+    }
+
+    // Add up the number of bits from each of the 4 bytes in the 32-bit value
+    return bits[ value        & 0xff] +
+           bits[(value >>  8) & 0xff] +
+           bits[(value >> 16) & 0xff] +
+           bits[(value >> 24) & 0xff];
+}
+
 // Test a given implementation
 void test(unsigned int (*function)(unsigned int value), std::string label) {
     const unsigned int tests[] = {
@@ -70,5 +90,8 @@ int main() {
     test(shortcut, "Obvious with shortcut");
 
     // Test Kernighan's method
-    test(kernighan, "Kernighan's Method");
+    test(kernighan, "Kernighan's method");
+
+    // Test the lookup table Kernighan's method
+    test(lookup, "Lookup table");
 }
