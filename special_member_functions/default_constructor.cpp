@@ -29,8 +29,8 @@ public:
     void print() const;                     // print the vector
 
 private:
-    int size;
-    int* data;
+    int size  = {0};
+    int* data = {nullptr};
 };
 
 // Print the vector
@@ -63,4 +63,5 @@ int main() {
     cout << left << setw(25) << "Vector* e = new Vector";
     Vector* e = new Vector; // calls the default constructor
     e->print();
+    delete e;
 }

@@ -33,8 +33,8 @@ public:
     void print() const;                     // print the vector
 
 private:
-    int size;
-    int* data;
+    int size  = {0};
+    int* data = {nullptr};
 };
 
 // Fill the vector with values
