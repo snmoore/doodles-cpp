@@ -46,6 +46,9 @@ Determine if two rectangles overlap
 ## pairs
 Trivial examples using pairs
 
+## quick_select
+Find the median of a vector of values using quickselect
+
 ## quick_sort
 Sort a vector of values using quicksort
 
@@ -55,7 +58,7 @@ Reverse words and sentences
 ## roman_numerals
 Convert Roman numerals to decimal values
 
-## roundup
+## round_up
 Round up an integer to the next highest power of 2
 
 ## signal
