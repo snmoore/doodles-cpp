@@ -92,6 +92,6 @@ int main() {
     // Test Kernighan's method
     test(kernighan, "Kernighan's method");
 
-    // Test the lookup table Kernighan's method
+    // Test the lookup table implementation
     test(lookup, "Lookup table");
 }
