@@ -1,24 +1,4 @@
-# See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
-SHELL = /bin/sh
+sources=count_bits.cpp
+target=count_bits
 
-SOURCES=count_bits.cpp
-TARGET=count_bits
-CFLAGS+=-std=c++11 -Wall -Wextra -Wpedantic -g
-LINT=scan-build -v
-
-.SUFFIXES:
-.SUFFIXES: .cpp .o
-
-.PHONY: all clean lint
-
-all: $(TARGET)
-
-clean:
-	-rm $(TARGET)
-	-rm -rf $(TARGET).dSYM
-
-lint: $(SOURCES)
-	$(LINT) $(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $(TARGET)
-
-$(TARGET): $(SOURCES)
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+include ../Common.mk

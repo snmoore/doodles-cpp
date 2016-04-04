@@ -1,15 +1,4 @@
-# See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
-SHELL = /bin/sh
+sources=signal.cpp
+target=signal
 
-.SUFFIXES:
-.SUFFIXES: .cpp .o
-
-CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
-
-all: signal
-
-clean:
-	rm signal
-
-signal: signal.cpp
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+include ../Common.mk

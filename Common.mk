@@ -9,21 +9,14 @@ LINT=scan-build -v
 
 .PHONY: all clean lint
 
-all: posix threads
+all: $(target)
 
 clean:
-	-rm posix
-	-rm posix.o
-	-rm -rf posix.dSYM
-	-rm threads
-	-rm threads.o
-	-rm -rf threads.dSYM
+	-rm $(target)
+	-rm -rf $(target).dSYM
 
-lint: posix.cpp threads.cpp
-	$(LINT) $(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $? -c
+lint: $(sources)
+	$(LINT) $(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $? -o $(target)
 
-posix: posix.cpp
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $? -o $@
-
-threads: threads.cpp
+$(target): $(sources)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $? -o $@

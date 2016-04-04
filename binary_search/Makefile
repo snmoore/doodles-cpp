@@ -1,15 +1,4 @@
-# See https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html#Makefile-Basics
-SHELL = /bin/sh
+sources=binary_search.cpp
+target=binary_search
 
-.SUFFIXES:
-.SUFFIXES: .cpp .o
-
-CFLAGS +=-std=c++11 -Wall -Wextra -Wpedantic
-
-all: binary_search
-
-clean:
-	rm binary_search
-
-binary_search: binary_search.cpp
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
+include ../Common.mk
